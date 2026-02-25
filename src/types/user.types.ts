@@ -13,5 +13,5 @@ export interface User {
   height?: number;
   goal?: string;
   medical_conditions?: string;
-  memberSince?: string; // ISO date — may differ from createdAt for pre-existing members
+  memberSince?: string;
 }

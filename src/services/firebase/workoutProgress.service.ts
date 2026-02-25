@@ -1,10 +1,8 @@
 import { doc, getDoc, setDoc, collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from './config';
 
-// exerciseId -> array of booleans, one per set (true = set done)
 export type SetChecklist = Record<string, boolean[]>;
 
-// Immutable snapshot of exercise details captured at the moment sets are checked
 export type ExerciseSnapshot = {
   name: string;
   reps: number | string;
@@ -13,7 +11,7 @@ export type ExerciseSnapshot = {
 export type ExerciseSnapshots = Record<string, ExerciseSnapshot>;
 
 function todayDocId(workoutId: string, studentId: string): string {
-  const date = new Date().toISOString().split('T')[0]; // "2026-02-23"
+  const date = new Date().toISOString().split('T')[0];
   return `${workoutId}_${studentId}_${date}`;
 }
 
@@ -29,11 +27,11 @@ export type WorkoutProgressRecord = {
   id: string;
   workoutId: string;
   studentId: string;
-  date: string; // "YYYY-MM-DD"
+  date: string;
   completedSets: SetChecklist;
-  exerciseSnapshots?: ExerciseSnapshots; // static copy of exercise details at time of check
+  exerciseSnapshots?: ExerciseSnapshots;
   savedAt: string;
-  studentNote?: string; // student's free-text note for the session
+  studentNote?: string;
 };
 
 export async function getAllProgressForStudent(

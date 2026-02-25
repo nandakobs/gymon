@@ -7,7 +7,7 @@ export interface CoachObservation {
   coachId: string;
   coachName: string;
   content: string;
-  createdAt: string; // ISO timestamp
+  createdAt: string;
 }
 
 export async function addCoachObservation(
@@ -25,6 +25,5 @@ export async function getCoachObservations(
   );
   const snap = await getDocs(q);
   const results = snap.docs.map((d) => ({ id: d.id, ...d.data() } as CoachObservation));
-  // Sort newest-first client-side to avoid needing a Firestore composite index
   return results.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }

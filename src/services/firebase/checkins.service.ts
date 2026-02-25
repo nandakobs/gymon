@@ -24,7 +24,6 @@ export async function getCheckInsByStudent(studentId: string): Promise<CheckIn[]
 export async function hasCheckedInToday(studentId: string): Promise<boolean> {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
-  // Single-field query only — avoids requiring a composite Firestore index.
   const q = query(collection(db, 'checkins'), where('studentId', '==', studentId));
   const snap = await getDocs(q);
   return snap.docs.some((d) => {

@@ -12,7 +12,6 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Inicializa o Firebase app apenas uma vez
 let app;
 if (getApps().length === 0) {
   app = initializeApp(firebaseConfig);
@@ -20,17 +19,14 @@ if (getApps().length === 0) {
   app = getApps()[0];
 }
 
-// Inicializa Auth com AsyncStorage persistence para React Native
 let auth;
 try {
   auth = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage),
   });
 } catch (error) {
-  // Se já foi inicializado, pega a instância existente
   auth = getAuth(app);
 }
 
-// Inicializa Firestore
 export const db = getFirestore(app);
 export { auth };

@@ -19,15 +19,13 @@ export function useNotifications() {
 
     notificationListener.current = Notifications.addNotificationReceivedListener(
       (notification) => {
-        // Handle foreground notification
-        console.log('Notification received:', notification);
+          console.log('Notification received:', notification);
       }
     );
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        // Handle notification tap
-        console.log('Notification response:', response);
+          console.log('Notification response:', response);
       }
     );
 

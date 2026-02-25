@@ -13,11 +13,8 @@ export interface StreakStatus {
   streak: number;
   plannedDays: WeekDay[];
   freezesRemaining: number;
-  /** Today is in the student's planned schedule */
   isTodayPlanned: boolean;
-  /** Today is planned and the student hasn't checked in yet */
   isAtRisk: boolean;
-  /** At risk + no freezes left + streak > 0 — streak will reset if no check-in today */
   willLoseStreak: boolean;
 }
 

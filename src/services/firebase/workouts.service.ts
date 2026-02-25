@@ -18,7 +18,6 @@ export async function getWorkoutsByStudent(studentId: string): Promise<Workout[]
   return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Workout));
 }
 
-// Used by coaches: includes gymId in the query so Firestore security rules can be verified.
 export async function getWorkoutsByStudentForCoach(
   studentId: string,
   gymId: string,

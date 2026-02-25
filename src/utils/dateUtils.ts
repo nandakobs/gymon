@@ -27,10 +27,6 @@ export function daysBetween(a: Date, b: Date): number {
   return differenceInDays(startOfDay(b), startOfDay(a));
 }
 
-/**
- * Returns true if the streak should be broken:
- * the student had a planned day yesterday and no check-in.
- */
 export function isStreakAtRisk(
   plannedDays: WeekDay[],
   lastCheckInDate: string | undefined,
