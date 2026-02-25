@@ -1,0 +1,119 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function me() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isManager() {
+      return isAuthenticated() && me().role == 'manager';
+    }
+
+    function isCoach() {
+      return isAuthenticated() && me().role == 'coach';
+    }
+
+    // ── users ────────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      // Every user can read/write their own document.
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+
+      // Coaches and managers can read all users in their gym.
+      allow read: if (isCoach() || isManager()) && resource.data.gymId == me().gymId;
+
+      // Managers can create a new user document inside their gym.
+      allow create: if isManager() && request.resource.data.gymId == me().gymId;
+
+      // Managers can update users in their gym.
+      allow update: if isManager() && resource.data.gymId == me().gymId;
+    }
+
+    // ── gyms ─────────────────────────────────────────────────────────────────
+    match /gyms/{gymId} {
+      // Any authenticated user may read gym info (needed to show gym name, schedule, etc.).
+      allow read: if isAuthenticated();
+
+      // Only managers of this gym may write.
+      allow write: if isManager() && me().gymId == gymId;
+    }
+
+    // ── workouts ─────────────────────────────────────────────────────────────
+    match /workouts/{workoutId} {
+      // Students can read their own workouts.
+      allow read: if isAuthenticated() && resource.data.studentId == request.auth.uid;
+
+      // Coaches can read/update/delete workouts in their gym.
+      allow read, update, delete: if isCoach() && resource.data.gymId == me().gymId;
+
+      // Coaches can create new workouts for their gym.
+      allow create: if isCoach() && request.resource.data.gymId == me().gymId;
+
+      // Managers can read all workouts in their gym.
+      allow read: if isManager() && resource.data.gymId == me().gymId;
+    }
+
+    // ── checkins ─────────────────────────────────────────────────────────────
+    match /checkins/{checkinId} {
+      // Students can create and read their own check-ins.
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      allow read:   if isAuthenticated() && resource.data.studentId == request.auth.uid;
+
+      // Coaches and managers can read check-ins for their gym.
+      allow read: if isAuthenticated()
+                  && (isCoach() || isManager())
+                  && resource.data.gymId == me().gymId;
+    }
+
+    // ── workoutProgress ───────────────────────────────────────────────────────
+    // Document ID format: {workoutId}_{studentId}_{date}
+    match /workoutProgress/{progressId} {
+      // resource is null when the document doesn't exist yet (first open).
+      // Allow the read so getDoc returns an empty snapshot instead of throwing.
+      allow read: if isAuthenticated() && (resource == null || resource.data.studentId == request.auth.uid);
+      allow update, delete: if isAuthenticated() && resource.data.studentId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+
+      // Coaches can read progress for their students.
+      allow read: if isCoach() && isAuthenticated();
+    }
+
+    // ── studentProfiles ───────────────────────────────────────────────────────
+    match /studentProfiles/{userId} {
+      // Students manage their own profile.
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+
+      // Coaches and managers can read profiles for auditing/reporting.
+      allow read: if (isCoach() || isManager()) && isAuthenticated();
+    }
+
+    // ── coachObservations ─────────────────────────────────────────────────────
+    match /coachObservations/{obsId} {
+      // Coaches can create observations for any student.
+      allow create: if isCoach();
+
+      // Coaches can read observations they wrote or for their gym's students.
+      allow read: if isCoach();
+
+      // Managers can read all observations.
+      allow read: if isManager();
+    }
+
+    // ── supportRequests ───────────────────────────────────────────────────────
+    match /supportRequests/{requestId} {
+      // Students can create and read their own support requests.
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      allow read:   if isAuthenticated() && resource.data.studentId == request.auth.uid;
+
+      // Coaches can read and update requests assigned to them.
+      allow read, update: if isCoach() && resource.data.coachId == request.auth.uid;
+
+      // Managers can read all requests for their gym.
+      allow read: if isManager() && resource.data.gymId == me().gymId;
+    }
+  }
+}
