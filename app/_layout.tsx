@@ -11,7 +11,7 @@ import { LoadingScreen } from '@/components/common/LoadingScreen';
 
 SplashScreen.preventAutoHideAsync();
 
-function RootLayoutNav() {
+export function RootLayoutNav() {
   const { user, role, isLoading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
