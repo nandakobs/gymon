@@ -130,3 +130,36 @@ O redirecionamento após o login é feito automaticamente com base no campo `rol
 - **Freezes:** cada aluno tem **2 freezes por mês** (aplicados automaticamente; reiniciam no dia 1º, sem acúmulo).
 - **Offline:** fichas de treino são cacheadas localmente pelo Firestore; completar exercícios funciona sem internet e sincroniza ao reconectar.
 
+## 📱 Telas do Aplicativo
+
+---
+
+### Autenticação
+
+|                Login                 |
+|:------------------------------------:|
+| ![Login](docs/screenshots/login.png) |
+
+---
+
+### Aluno
+
+|                 Dashboard (aluno ativo)                  |               Dashboard (aluno novo na academia)               |
+|:--------------------------------------------------------:|:--------------------------------------------------------------:|
+| ![Dashboard ativo](docs/screenshots/aluno-dashboard.png) | ![Dashboard vazio](docs/screenshots/aluno-dashboard-vazio.png) |
+
+|                Checklist do Treino                 |                  Meus Dados                  |
+|:--------------------------------------------------:|:--------------------------------------------:|
+| ![Checklist](docs/screenshots/aluno-checklist.png) | ![Perfil](docs/screenshots/aluno-perfil.png) |
+
+|                Histórico de Treinos                |
+|:--------------------------------------------------:|
+| ![Histórico](docs/screenshots/aluno-historico.png) |
+
+---
+
+### Coach
+
+|                       Detalhe do Aluno                        |                        Histórico do Aluno                         |
+|:-------------------------------------------------------------:|:-----------------------------------------------------------------:|
+| ![Detalhe do Aluno](docs/screenshots/coach-detalhe-aluno.png) | ![Histórico do Aluno](docs/screenshots/coach-historico-aluno.png) |
